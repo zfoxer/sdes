@@ -11,8 +11,12 @@ package zsdes;
 
 import zsdes.Zsdes;
 
+import javax.swing.text.PlainDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+
 /**
- *  Provides the front-end functionality of the app.
+ * Provides the front-end functionality of the app.
  */
 public class ZsdesApplet extends javax.swing.JFrame
 {
@@ -66,30 +70,13 @@ public class ZsdesApplet extends javax.swing.JFrame
     }
 
     /**
-     * Validates the content of the textfield.
-     * @param jtf Textfield to validate its text
-     * @param size Maximum limit
-     */
-    private void validateText(javax.swing.JTextField jtf, int size)
-    {
-        String currentText = jtf.getText();
-        String result = "";
-        for(int i = 0; i < currentText.length(); ++i)
-            if(currentText.charAt(i) == '1' || currentText.charAt(i) == '0') result += currentText.charAt(i);
-
-        if(result.length() >= size + 1) {
-            jtf.setText(result.substring(0, size));
-            return;
-        }
-
-        jtf.setText(result);
-    }
-
-    /**
      * Launching point for the app.
      */
     private void kickStart()
     {
+        jTextArea1.setText("");
+        jTextArea2.setText("");
+        jTextArea3.setText("");
         int[] key = new int[KEY_SIZE];
         for(int i = 0; i < key.length; ++i)
             key[i] = Integer.parseInt(new String("" + jTextField1.getText().charAt(i)));
@@ -139,15 +126,26 @@ public class ZsdesApplet extends javax.swing.JFrame
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jTextArea1.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
         jPanel3 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jTextArea2.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        jTextArea3.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
+
+        jTextField1 = new javax.swing.JTextField(15);
+        jTextField2 = new javax.swing.JTextField(15);
+        jTextField3 = new javax.swing.JTextField(15);
+        getContentPane().add(jTextField1);
+        getContentPane().add(jTextField2);
+        getContentPane().add(jTextField3);
+        jTextField1.setDocument(new JTextFieldLimiter(10));
+        jTextField2.setDocument(new JTextFieldLimiter(8));
+        jTextField3.setDocument(new JTextFieldLimiter(8));
+
         jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
@@ -259,6 +257,7 @@ public class ZsdesApplet extends javax.swing.JFrame
 
     /**
      * Action to perform for this item.
+     *
      * @param evt Action event
      */
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt)
@@ -286,11 +285,11 @@ public class ZsdesApplet extends javax.swing.JFrame
 
     /**
      * Action to perform for this item.
+     *
      * @param evt Key event
      */
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt)
     {
-        validateText(jTextField1, KEY_SIZE);
         if((jTextField1.getText().length() == KEY_SIZE && jTextField2.getText().length() == PLAINTEXT_SIZE) || (jTextField1.getText().length() == KEY_SIZE && jTextField3.getText().length() == CIPHERTEXT_SIZE)) {
             kickStart();
         }
@@ -298,26 +297,27 @@ public class ZsdesApplet extends javax.swing.JFrame
 
     /**
      * Action to perform for this item.
+     *
      * @param evt Key event
      */
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt)
     {
-        validateText(jTextField2, PLAINTEXT_SIZE);
         if(jTextField1.getText().length() == KEY_SIZE && jTextField2.getText().length() == PLAINTEXT_SIZE) kickStart();
     }
 
     /**
      * Action to perform for this item.
+     *
      * @param evt Key event
      */
     private void jTextField3KeyReleased(java.awt.event.KeyEvent evt)
     {
-        validateText(jTextField3, CIPHERTEXT_SIZE);
         if(jTextField1.getText().length() == KEY_SIZE && jTextField3.getText().length() == CIPHERTEXT_SIZE) kickStart();
     }
 
     /**
      * Action to perform for this item.
+     *
      * @param evt Action event
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)
@@ -332,6 +332,7 @@ public class ZsdesApplet extends javax.swing.JFrame
 
     /**
      * Action to perform for this item.
+     *
      * @param evt Action event
      */
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt)
@@ -348,6 +349,7 @@ public class ZsdesApplet extends javax.swing.JFrame
 
     /**
      * Entry.
+     *
      * @param args Ignored command line arguments
      */
     public static void main(String[] args)
@@ -378,4 +380,38 @@ public class ZsdesApplet extends javax.swing.JFrame
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+}
+
+/**
+ * Limits the maximum input characters in a jTextField
+ */
+class JTextFieldLimiter extends PlainDocument
+{
+    private int textLimit;
+
+    /**
+     * Constructs the instance with the input limit.
+     * @param textLimit Limit to apply
+     */
+    JTextFieldLimiter(int textLimit)
+    {
+        super();
+        this.textLimit = textLimit;
+    }
+
+    /**
+     * Insert the string only if rules are obeyed.
+     * @param offset Offset
+     * @param newText New string to insert
+     * @param attrib Attribute set
+     * @throws BadLocationException
+     */
+    public void insertString(int offset, String newText, AttributeSet attrib) throws BadLocationException
+    {
+        if(newText == null || (!newText.endsWith("1") && !newText.endsWith("0")) )
+            return;
+
+        if(getLength() + newText.length() <= textLimit)
+            super.insertString(offset, newText, attrib);
+    }
 }

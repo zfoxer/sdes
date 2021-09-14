@@ -1,2 +1,23 @@
-# sdes
-S-DES cryptography demonstration app for Java
+# S-DES cryptography demonstration app for Java
+
+```python
+Copyright (C) 2008-2021 by Constantine Kyriakopoulos, zfox@users.sourceforge.net
+Version: 0.9
+License: GNU GPL Version 2
+```
+
+## Usage
+
+Use the Java runtime environment 17 for execution. The GUI pops up that allows entering a 10-bit encryption/decryption key in binary (0, 1 digits) and the plaintext/ciphertext in the same form (8-bit). Executing the algorithm, decription of the encoding/decoding functionality is provided in the three main text boxes.
+
+## Algorithm description
+
+```python
+Stallings, W., 2014. Cryptography and Network Security: Principles and Practice, 6th Edition, Appendix G.
+```
+
+## Changelog
+
+<pre>
+0.9      2021-09-14    Initial public release
+</pre>

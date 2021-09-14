@@ -10,7 +10,7 @@
 package zsdes;
 
 import zsdes.Zsdes;
-
+import javax.swing.JFrame;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -63,10 +63,18 @@ public class ZsdesApplet extends javax.swing.JFrame
      */
     private void zInit()
     {
+        jTextArea1.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
+        jTextArea2.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
+        jTextArea3.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
+        jTextField1.setDocument(new JTextFieldLimiter(10));
+        jTextField2.setDocument(new JTextFieldLimiter(8));
+        jTextField3.setDocument(new JTextFieldLimiter(8));
         jTextArea1.setEditable(false);
         jTextArea2.setEditable(false);
         jTextArea3.setEditable(false);
         jTextField3.setEditable(false);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -126,15 +134,12 @@ public class ZsdesApplet extends javax.swing.JFrame
         jPanel2 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jTextArea1.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
         jPanel3 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
-        jTextArea2.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
-        jTextArea3.setText("\nEnter key/plaintext/ciphertext in binary: 0, 1");
 
         jTextField1 = new javax.swing.JTextField(15);
         jTextField2 = new javax.swing.JTextField(15);
@@ -142,9 +147,6 @@ public class ZsdesApplet extends javax.swing.JFrame
         getContentPane().add(jTextField1);
         getContentPane().add(jTextField2);
         getContentPane().add(jTextField3);
-        jTextField1.setDocument(new JTextFieldLimiter(10));
-        jTextField2.setDocument(new JTextFieldLimiter(8));
-        jTextField3.setDocument(new JTextFieldLimiter(8));
 
         jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();

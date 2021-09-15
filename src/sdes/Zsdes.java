@@ -140,11 +140,13 @@ public class Zsdes
      */
     static public int[] generateKeyA(final int[] key, StringBuffer log)
     {
-        log.append("Generating KeyA...\n");
+        log.append("Main Key: " + byIntArray(key) + "\n");
+        log.append("Generating Key A...\n");
 
         int[] kplus = generateKeyPlus(key, log);
+        log.append("Permuting key: " + byIntArray(kplus) + " (with P08)" + "\n");
         int[] keyA = permute(kplus, P08);
-        log.append("KeyA generated successfully: ");
+        log.append("Key A generated successfully: ");
         for(int i = 0; i < keyA.length; ++i)
             log.append(keyA[i]);
         log.append("\n\n");
@@ -160,9 +162,10 @@ public class Zsdes
      */
     static public int[] generateKeyB(final int[] key, StringBuffer log)
     {
-        log.append("Generating KeyB...\n");
-        int[] kplus = generateKeyPlus(key, log);
+        log.append("Main Key: " + byIntArray(key) + "\n");
+        log.append("Generating Key B...\n");
 
+        int[] kplus = generateKeyPlus(key, log);
         int[] keyPlusLeft = leftHalf(kplus);
         int[] keyPlusRight = rightHalf(kplus);
         log.append("First part of the key: ");
@@ -178,12 +181,12 @@ public class Zsdes
         log.append(byIntArray(keyPlusRight) + '\n');
 
         int[] kplusplus = merge(keyPlusLeft, keyPlusRight);
-        log.append("Keys merged: ");
+        log.append("Parts merged: ");
         log.append(byIntArray(kplusplus) + '\n');
 
-        log.append("Permuting with P08...\n");
+        log.append("Permuting key: " + byIntArray(kplusplus) + " (with P08)" + "\n");
         int[] keyB = permute(kplusplus, P08);
-        log.append("KeyB generated successfully: ");
+        log.append("Key B generated successfully: ");
         log.append(byIntArray(keyB) + "\n\n");
 
         return keyB;
@@ -197,6 +200,7 @@ public class Zsdes
      */
     static private int[] generateKeyPlus(final int[] key, StringBuffer log)
     {
+        log.append("Permuting key: " + byIntArray(key) + "\n");
         int[] keyP10 = permute(key, P10);
         log.append("Key after P10 permutation: ");
         log.append(byIntArray(keyP10) + '\n');
@@ -217,7 +221,7 @@ public class Zsdes
         log.append(byIntArray(keyP10Right) + '\n');
 
         int[] kplus = merge(keyP10Left, keyP10Right);
-        log.append("Keys merged: ");
+        log.append("Parts merged: ");
         log.append(byIntArray(kplus) + '\n');
 
         return kplus;

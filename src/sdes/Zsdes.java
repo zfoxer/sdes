@@ -37,46 +37,67 @@ public class Zsdes
      */
     static public int[] encrypt(int[] key, final int[] plainText, StringBuffer encLog, StringBuffer keyLog)
     {
-        encLog.append("Plaintext: ");
-        encLog.append(byIntArray(plainText) + "\n");
+        encLog.append("Encrypting..." + "\n");
+        encLog.append("Plaintext: " + byIntArray(plainText) + "\n");
+        encLog.append("With key: " + byIntArray(key) + "\n");
 
         int[] ipPlainText = permute(plainText, IP);
-        encLog.append("I/Permutation: ");
-        encLog.append(byIntArray(ipPlainText) + "\n");
-
+        encLog.append("Permuting plaintext with IP: " + byIntArray(ipPlainText) + "\n");
         int[] mL = leftHalf(ipPlainText);
         int[] mR = rightHalf(ipPlainText);
+        encLog.append("Left half of the result: " + byIntArray(mL) + "\n");
+        encLog.append("Right half of result: " + byIntArray(mR) + "\n");
 
         int[] keyA = generateKeyA(key, keyLog);
+        encLog.append("Generated Key A: " + byIntArray(keyA) + "\n");
+
         int[] epMR = permute(mR, E_P);
-        encLog.append("E/Permutation from 2nd half: ");
-        encLog.append(byIntArray(epMR) + "\n");
-
+        encLog.append("Permutation of 2nd half (with E/P): " + byIntArray(epMR) + "\n");
         int[] sFull = xor(keyA, epMR);
-
+        encLog.append("XOR of " + byIntArray(epMR) + " with Key A: " + byIntArray(sFull) + "\n");
+        encLog.append("Left half: " + byIntArray(leftHalf(sFull)) + " is used to get the index of matrix S0" + "\n");
+        encLog.append("Right half: " + byIntArray(rightHalf(sFull)) + " is used to get the index of matrix S1" + "\n");
         int indexA = s0[getRow(leftHalf(sFull))][getColumn(leftHalf(sFull))];
         int indexB = s1[getRow(rightHalf(sFull))][getColumn(rightHalf(sFull))];
-
+        encLog.append("Index of S0: " + indexA + "\n");
+        encLog.append("Index of S1: " + indexB + "\n");
         int[] m_r = getBinArray(indexA, indexB);
+        encLog.append("Indices into binary: " + byIntArray(m_r) + "\n");
+
         int[] p04mr = permute(m_r, P04);
+        encLog.append("Permuting the result with P04: " + byIntArray(p04mr) + "\n");
         int[] p04mrml = xor(p04mr, mL);
-
-        int[] mplus = swap(xor(p04mr, mL), mR);
-        encLog.append("Middle result: ");
-        encLog.append(byIntArray(mplus) + "\n");
-
+        encLog.append("XOR of " + byIntArray(p04mr) + " with " + byIntArray(mL) + ": " + byIntArray(p04mrml) + "\n");
+        int[] mplus = swap(p04mrml, mR);
+        encLog.append("Swapping " + byIntArray(p04mrml) + " and " + byIntArray(mR) + ": " + byIntArray(mplus) + "\n");
         int[] x1 = leftHalf(mplus);
         int[] x2 = rightHalf(mplus);
+        encLog.append("First half: " + byIntArray(x1) + "\n");
+        encLog.append("Second half: " + byIntArray(x2) + "\n");
 
-        int[] kFull = xor(permute(x2, E_P), generateKeyB(key, keyLog));
+        int[] keyB = generateKeyB(key, keyLog);
+        encLog.append("Generated Key B: " + byIntArray(keyB) + "\n");
 
+        int[] perX2EP = permute(x2, E_P);
+        encLog.append("Permuting " + byIntArray(x2) + " with E/P: " + byIntArray(perX2EP) + "\n");
+        int[] kFull = xor(perX2EP, keyB);
+        encLog.append("XOR of " + byIntArray(perX2EP) + " with Key B: " + byIntArray(kFull) + "\n");
+        encLog.append("Left half: " + byIntArray(leftHalf(kFull)) + " is used to get the index of matrix S0" + "\n");
+        encLog.append("Right half: " + byIntArray(rightHalf(kFull)) + " is used to get the index of matrix S1" + "\n");
         int indexAA = s0[getRow(leftHalf(kFull))][getColumn(leftHalf(kFull))];
         int indexBB = s1[getRow(rightHalf(kFull))][getColumn(rightHalf(kFull))];
+        encLog.append("Index of S0: " + indexAA + "\n");
+        encLog.append("Index of S1: " + indexBB + "\n");
         int[] m_r2 = getBinArray(indexAA, indexBB);
+        encLog.append("Indices into binary: " + byIntArray(m_r2) + "\n");
 
-        int[] xx = merge(xor(permute(m_r2, P04), x1), x2);
-        encLog.append("IP_1 permutation of: ");
-        encLog.append(byIntArray(xx) + "\n");
+        int[] mr2p04 = permute(m_r2, P04);
+        encLog.append("Permuting " + byIntArray(m_r2) + " with P04: " + byIntArray(mr2p04) + "\n");
+        int[] mr2p04x1 = xor(mr2p04, x1);
+        encLog.append("XOR of " + byIntArray(mr2p04) + " with " + byIntArray(x1) + ": " + byIntArray(mr2p04x1) + "\n");
+        int[] xx = merge(mr2p04x1, x2);
+        encLog.append("Merging " + byIntArray(mr2p04x1) + " with " + byIntArray(x2) + ": " + byIntArray(xx) + "\n");
+        encLog.append("Inverse permutation (IP-1) of " + byIntArray(xx) + "\n");
         int[] cipherText = permute(xx, IP_1);
         encLog.append("Ciphertext generated successfully: ");
         encLog.append(byIntArray(cipherText) + "\n");

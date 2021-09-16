@@ -115,38 +115,74 @@ public class Zsdes
      */
     public static int[] decrypt(int[] key, int[] cipherText, StringBuffer decLog, StringBuffer keyLog)
     {
-        decLog.append("Ciphertext: ");
-        decLog.append(byIntArray(cipherText) + "\n");
+        decLog.append("Decrypting..." + "\n");
+        decLog.append("Ciphertext: " + byIntArray(cipherText) + "\n");
+        decLog.append("With key: " + byIntArray(key) + "\n");
 
         int[] ipText = permute(cipherText, IP);
-        decLog.append("I/Permutation: ");
-        decLog.append(byIntArray(ipText) + "\n");
-
+        decLog.append("Permuting " + byIntArray(cipherText) + " with IP: " + byIntArray(ipText) + "\n");
         int[] ipTextLeft = leftHalf(ipText);
         int[] ipTextRight = rightHalf(ipText);
+        decLog.append("First half: " + byIntArray(ipTextLeft) + "\n");
+        decLog.append("Second half: " + byIntArray(ipTextRight) + "\n");
 
-        decLog.append("E/Permutation: ");
-        decLog.append(byIntArray(permute(ipTextRight, E_P)) + "\n");
-        int[] ztemp = xor(permute(ipTextRight, E_P), generateKeyB(key, keyLog));
+        int[] epText = permute(ipTextRight, E_P);
+        decLog.append("Permuting " + byIntArray(ipTextRight) + " with E/P: " + byIntArray(epText) + "\n");
+
+        int[] keyB = generateKeyB(key, keyLog);
+        decLog.append("Generated Key B: " + byIntArray(keyB) + "\n");
+
+        int[] ztemp = xor(epText, keyB);
+        decLog.append("XOR of " + byIntArray(epText) + " with Key B: " + byIntArray(ztemp) + "\n");
+        decLog.append("Left half: " + byIntArray(leftHalf(ztemp)) + " is used to get the index of matrix S0" + "\n");
+        decLog.append("Right half: " + byIntArray(rightHalf(ztemp)) + " is used to get the index of matrix S1" + "\n");
         int indexA = s0[getRow(leftHalf(ztemp))][getColumn(leftHalf(ztemp))];
         int indexB = s1[getRow(rightHalf(ztemp))][getColumn(rightHalf(ztemp))];
+        decLog.append("Index of S0: " + indexA + "\n");
+        decLog.append("Index of S1: " + indexB + "\n");
         int[] mx = getBinArray(indexA, indexB);
+        decLog.append("Indices into binary: " + byIntArray(mx) + "\n");
 
-        decLog.append("P04 permutation of middle result: ");
-        decLog.append(byIntArray(mx) + "\n");
-        int[] blue = merge(xor(permute(mx, P04), ipTextLeft), ipTextRight);
+        int[] p04Text = permute(mx, P04);
+        decLog.append("Permuting " + byIntArray(mx) + " with P04: " + byIntArray(p04Text) + "\n");
+        int[] xoredP04 = xor(p04Text, ipTextLeft);
+        decLog.append("XOR of " + byIntArray(p04Text) + " with " + byIntArray(ipTextLeft) + ": " + byIntArray(xoredP04) + "\n");
+        int[] blue = merge(xoredP04, ipTextRight);
+        decLog.append("Merging " + byIntArray(xoredP04) + " with " + byIntArray(ipTextRight) + ": " + byIntArray(blue) + "\n");
+
         int[] green = swap(leftHalf(blue), rightHalf(blue));
+        decLog.append("First half: " + byIntArray(leftHalf(blue)) + "\n");
+        decLog.append("Second half: " + byIntArray(rightHalf(blue)) + "\n");
+        decLog.append("Swapping both parts: " + byIntArray(green) + "\n");
 
-        decLog.append("E/Permutation of: ");
-        decLog.append(byIntArray(rightHalf(green)) + "\n");
-        int[] ztemp2 = xor(permute(rightHalf(green), E_P), generateKeyA(key, keyLog));
+        int[] rightHEP = permute(rightHalf(green), E_P);
+        decLog.append("Permuting the right half of " + byIntArray(green) + " with E/P: " + byIntArray(rightHEP) + "\n");
+        int[] keyA = generateKeyA(key, keyLog);
+        decLog.append("Generated Key A: " + byIntArray(keyA) + "\n");
+        int[] ztemp2 = xor(rightHEP, keyA);
+        decLog.append("XOR of " + byIntArray(rightHEP) + " with Key A: " + byIntArray(ztemp2) + "\n");
+        decLog.append("Left half: " + byIntArray(leftHalf(ztemp2)) + " is used to get the index of matrix S0" + "\n");
+        decLog.append("Right half: " + byIntArray(rightHalf(ztemp2)) + " is used to get the index of matrix S1" + "\n");
         int indexAA = s0[getRow(leftHalf(ztemp2))][getColumn(leftHalf(ztemp2))];
         int indexBB = s1[getRow(rightHalf(ztemp2))][getColumn(rightHalf(ztemp2))];
+        decLog.append("Index of S0: " + indexAA + "\n");
+        decLog.append("Index of S1: " + indexBB + "\n");
         int[] mx2 = getBinArray(indexAA, indexBB);
+        decLog.append("Indices into binary: " + byIntArray(mx2) + "\n");
 
-        decLog.append("Final P04 permutation of: ");
-        decLog.append(byIntArray(mx2) + "\n");
-        int[] plainText = permute(merge(xor(permute(mx2, P04), leftHalf(green)), rightHalf(green)), IP_1);
+        int[] mx2PerP04 = permute(mx2, P04);
+        decLog.append("Permuting " + byIntArray(mx2) + " with P04: " + byIntArray(mx2PerP04) + "\n");
+        int[] lHGreen = leftHalf(green);
+        decLog.append("Using first half of " + byIntArray(green) + ": " + byIntArray(lHGreen) + "\n");
+        int[] xorTemp = xor(mx2PerP04, lHGreen);
+        decLog.append("XOR of " + byIntArray(mx2PerP04) + " with " + byIntArray(lHGreen) + ": " + byIntArray(xorTemp) + "\n");
+        int[] rHGreen = rightHalf(green);
+        decLog.append("Using second half of " + byIntArray(green) + ": " + byIntArray(rHGreen) + "\n");
+        int[] merged = merge(xorTemp, rHGreen);
+        decLog.append("Merging " + byIntArray(xorTemp) + " with " + byIntArray(rHGreen) + ": " + byIntArray(merged) + "\n");
+
+        decLog.append("Inverse permutation (IP-1) of " + byIntArray(merged) + "\n");
+        int[] plainText = permute(merged, IP_1);
         decLog.append("Plaintext generated successfully: ");
         decLog.append(byIntArray(plainText) + "\n");
 

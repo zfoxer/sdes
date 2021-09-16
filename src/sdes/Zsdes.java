@@ -49,12 +49,12 @@ public class Zsdes
         encLog.append("Right half of result: " + byIntArray(mR) + "\n");
 
         int[] keyA = generateKeyA(key, keyLog);
-        encLog.append("Generated Key A: " + byIntArray(keyA) + "\n");
+        encLog.append("Generated Subkey A: " + byIntArray(keyA) + "\n");
 
         int[] epMR = permute(mR, E_P);
         encLog.append("Permutation of 2nd half (with E/P): " + byIntArray(epMR) + "\n");
         int[] sFull = xor(keyA, epMR);
-        encLog.append("XOR of " + byIntArray(epMR) + " with Key A: " + byIntArray(sFull) + "\n");
+        encLog.append("XOR of " + byIntArray(epMR) + " with Subkey A: " + byIntArray(sFull) + "\n");
         encLog.append("Left half: " + byIntArray(leftHalf(sFull)) + " is used to get the index of matrix S0" + "\n");
         encLog.append("Right half: " + byIntArray(rightHalf(sFull)) + " is used to get the index of matrix S1" + "\n");
         int indexA = s0[getRow(leftHalf(sFull))][getColumn(leftHalf(sFull))];
@@ -76,12 +76,12 @@ public class Zsdes
         encLog.append("Second half: " + byIntArray(x2) + "\n");
 
         int[] keyB = generateKeyB(key, keyLog);
-        encLog.append("Generated Key B: " + byIntArray(keyB) + "\n");
+        encLog.append("Generated Subkey B: " + byIntArray(keyB) + "\n");
 
         int[] perX2EP = permute(x2, E_P);
         encLog.append("Permuting " + byIntArray(x2) + " with E/P: " + byIntArray(perX2EP) + "\n");
         int[] kFull = xor(perX2EP, keyB);
-        encLog.append("XOR of " + byIntArray(perX2EP) + " with Key B: " + byIntArray(kFull) + "\n");
+        encLog.append("XOR of " + byIntArray(perX2EP) + " with Subkey B: " + byIntArray(kFull) + "\n");
         encLog.append("Left half: " + byIntArray(leftHalf(kFull)) + " is used to get the index of matrix S0" + "\n");
         encLog.append("Right half: " + byIntArray(rightHalf(kFull)) + " is used to get the index of matrix S1" + "\n");
         int indexAA = s0[getRow(leftHalf(kFull))][getColumn(leftHalf(kFull))];
@@ -130,10 +130,10 @@ public class Zsdes
         decLog.append("Permuting " + byIntArray(ipTextRight) + " with E/P: " + byIntArray(epText) + "\n");
 
         int[] keyB = generateKeyB(key, keyLog);
-        decLog.append("Generated Key B: " + byIntArray(keyB) + "\n");
+        decLog.append("Generated Subkey B: " + byIntArray(keyB) + "\n");
 
         int[] ztemp = xor(epText, keyB);
-        decLog.append("XOR of " + byIntArray(epText) + " with Key B: " + byIntArray(ztemp) + "\n");
+        decLog.append("XOR of " + byIntArray(epText) + " with Subkey B: " + byIntArray(ztemp) + "\n");
         decLog.append("Left half: " + byIntArray(leftHalf(ztemp)) + " is used to get the index of matrix S0" + "\n");
         decLog.append("Right half: " + byIntArray(rightHalf(ztemp)) + " is used to get the index of matrix S1" + "\n");
         int indexA = s0[getRow(leftHalf(ztemp))][getColumn(leftHalf(ztemp))];
@@ -158,9 +158,9 @@ public class Zsdes
         int[] rightHEP = permute(rightHalf(green), E_P);
         decLog.append("Permuting the right half of " + byIntArray(green) + " with E/P: " + byIntArray(rightHEP) + "\n");
         int[] keyA = generateKeyA(key, keyLog);
-        decLog.append("Generated Key A: " + byIntArray(keyA) + "\n");
+        decLog.append("Generated Subkey A: " + byIntArray(keyA) + "\n");
         int[] ztemp2 = xor(rightHEP, keyA);
-        decLog.append("XOR of " + byIntArray(rightHEP) + " with Key A: " + byIntArray(ztemp2) + "\n");
+        decLog.append("XOR of " + byIntArray(rightHEP) + " with Subkey A: " + byIntArray(ztemp2) + "\n");
         decLog.append("Left half: " + byIntArray(leftHalf(ztemp2)) + " is used to get the index of matrix S0" + "\n");
         decLog.append("Right half: " + byIntArray(rightHalf(ztemp2)) + " is used to get the index of matrix S1" + "\n");
         int indexAA = s0[getRow(leftHalf(ztemp2))][getColumn(leftHalf(ztemp2))];
@@ -198,12 +198,12 @@ public class Zsdes
     static public int[] generateKeyA(final int[] key, StringBuffer log)
     {
         log.append("Main Key: " + byIntArray(key) + "\n");
-        log.append("Generating Key A...\n");
+        log.append("Generating Subkey A...\n");
 
         int[] kplus = generateKeyPlus(key, log);
-        log.append("Permuting key: " + byIntArray(kplus) + " (with P08)" + "\n");
+        log.append("Permuting: " + byIntArray(kplus) + " (with P08)" + "\n");
         int[] keyA = permute(kplus, P08);
-        log.append("Key A generated successfully: ");
+        log.append("Subkey A generated successfully: ");
         for(int i = 0; i < keyA.length; ++i)
             log.append(keyA[i]);
         log.append("\n\n");
@@ -220,14 +220,14 @@ public class Zsdes
     static public int[] generateKeyB(final int[] key, StringBuffer log)
     {
         log.append("Main Key: " + byIntArray(key) + "\n");
-        log.append("Generating Key B...\n");
+        log.append("Generating Subkey B...\n");
 
         int[] kplus = generateKeyPlus(key, log);
         int[] keyPlusLeft = leftHalf(kplus);
         int[] keyPlusRight = rightHalf(kplus);
-        log.append("First part of the key: ");
+        log.append("First part: ");
         log.append(byIntArray(keyPlusLeft) + '\n');
-        log.append("Second part of the key: ");
+        log.append("Second part: ");
         log.append(byIntArray(keyPlusRight) + '\n');
 
         keyPlusLeft = shiftLeft(shiftLeft(keyPlusLeft));
@@ -241,9 +241,9 @@ public class Zsdes
         log.append("Parts merged: ");
         log.append(byIntArray(kplusplus) + '\n');
 
-        log.append("Permuting key: " + byIntArray(kplusplus) + " (with P08)" + "\n");
+        log.append("Permuting: " + byIntArray(kplusplus) + " (with P08)" + "\n");
         int[] keyB = permute(kplusplus, P08);
-        log.append("Key B generated successfully: ");
+        log.append("Subkey B generated successfully: ");
         log.append(byIntArray(keyB) + "\n\n");
 
         return keyB;
@@ -264,9 +264,9 @@ public class Zsdes
 
         int[] keyP10Left = leftHalf(keyP10);
         int[] keyP10Right = rightHalf(keyP10);
-        log.append("First part of the key: ");
+        log.append("First part: ");
         log.append(byIntArray(keyP10Left) + '\n');
-        log.append("Second part of the key: ");
+        log.append("Second part: ");
         log.append(byIntArray(keyP10Right) + '\n');
 
         keyP10Left = shiftLeft(keyP10Left);

@@ -2,14 +2,13 @@
  * ZsdesApplet.java
  *
  * Created on November 14, 2008, 6:26 PM
- * @version 0.9
+ * @version 1.0
  * @author Constantine Kyriakopoulos, zfox@users.sourceforge.net
  * License: GNU GPL v2
  */
 
 package zsdes;
 
-import zsdes.Zsdes;
 import javax.swing.JFrame;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.AttributeSet;
@@ -18,7 +17,7 @@ import javax.swing.text.BadLocationException;
 /**
  * Provides the front-end functionality of the app.
  */
-public class ZsdesApplet extends javax.swing.JFrame
+public class ZsdesApplet extends JFrame
 {
     public ZsdesApplet()
     {
@@ -350,7 +349,7 @@ public class ZsdesApplet extends javax.swing.JFrame
     }
 
     /**
-     * Entry.
+     * Entry point.
      *
      * @param args Ignored command line arguments
      */

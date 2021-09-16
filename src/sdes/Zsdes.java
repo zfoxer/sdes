@@ -2,7 +2,7 @@
  * Zsdes.java
  *
  * Created on November 14, 2008, 6:26 PM
- * @version 0.9
+ * @version 1.0
  * @author Constantine Kyriakopoulos, zfox@users.sourceforge.net
  * License: GNU GPL v2
  */
@@ -52,24 +52,24 @@ public class Zsdes
         encLog.append("Generated Subkey A: " + byIntArray(keyA) + "\n");
 
         int[] epMR = permute(mR, E_P);
-        encLog.append("Permutation of 2nd half (with E/P): " + byIntArray(epMR) + "\n");
+        encLog.append("Permuting 2nd half with E/P: " + byIntArray(epMR) + "\n");
         int[] sFull = xor(keyA, epMR);
         encLog.append("XOR of " + byIntArray(epMR) + " with Subkey A: " + byIntArray(sFull) + "\n");
-        encLog.append("Left half: " + byIntArray(leftHalf(sFull)) + " is used to get the index of matrix S0" + "\n");
-        encLog.append("Right half: " + byIntArray(rightHalf(sFull)) + " is used to get the index of matrix S1" + "\n");
+        encLog.append("Left half: " + byIntArray(leftHalf(sFull)) + " is used to get the index from matrix S0" + "\n");
+        encLog.append("Right half: " + byIntArray(rightHalf(sFull)) + " is used to get the index from matrix S1" + "\n");
         int indexA = s0[getRow(leftHalf(sFull))][getColumn(leftHalf(sFull))];
         int indexB = s1[getRow(rightHalf(sFull))][getColumn(rightHalf(sFull))];
         encLog.append("Index of S0: " + indexA + "\n");
         encLog.append("Index of S1: " + indexB + "\n");
         int[] m_r = getBinArray(indexA, indexB);
-        encLog.append("Indices into binary: " + byIntArray(m_r) + "\n");
+        encLog.append("Merged indices into binary: " + byIntArray(m_r) + "\n");
 
         int[] p04mr = permute(m_r, P04);
         encLog.append("Permuting the result with P04: " + byIntArray(p04mr) + "\n");
         int[] p04mrml = xor(p04mr, mL);
         encLog.append("XOR of " + byIntArray(p04mr) + " with " + byIntArray(mL) + ": " + byIntArray(p04mrml) + "\n");
         int[] mplus = swap(p04mrml, mR);
-        encLog.append("Swapping " + byIntArray(p04mrml) + " and " + byIntArray(mR) + ": " + byIntArray(mplus) + "\n");
+        encLog.append("Swapping/merging " + byIntArray(p04mrml) + " and " + byIntArray(mR) + ": " + byIntArray(mplus) + "\n");
         int[] x1 = leftHalf(mplus);
         int[] x2 = rightHalf(mplus);
         encLog.append("First half: " + byIntArray(x1) + "\n");
@@ -89,7 +89,7 @@ public class Zsdes
         encLog.append("Index of S0: " + indexAA + "\n");
         encLog.append("Index of S1: " + indexBB + "\n");
         int[] m_r2 = getBinArray(indexAA, indexBB);
-        encLog.append("Indices into binary: " + byIntArray(m_r2) + "\n");
+        encLog.append("Merged indices into binary: " + byIntArray(m_r2) + "\n");
 
         int[] mr2p04 = permute(m_r2, P04);
         encLog.append("Permuting " + byIntArray(m_r2) + " with P04: " + byIntArray(mr2p04) + "\n");
@@ -141,7 +141,7 @@ public class Zsdes
         decLog.append("Index of S0: " + indexA + "\n");
         decLog.append("Index of S1: " + indexB + "\n");
         int[] mx = getBinArray(indexA, indexB);
-        decLog.append("Indices into binary: " + byIntArray(mx) + "\n");
+        decLog.append("Merged indices into binary: " + byIntArray(mx) + "\n");
 
         int[] p04Text = permute(mx, P04);
         decLog.append("Permuting " + byIntArray(mx) + " with P04: " + byIntArray(p04Text) + "\n");
@@ -153,7 +153,7 @@ public class Zsdes
         int[] green = swap(leftHalf(blue), rightHalf(blue));
         decLog.append("First half: " + byIntArray(leftHalf(blue)) + "\n");
         decLog.append("Second half: " + byIntArray(rightHalf(blue)) + "\n");
-        decLog.append("Swapping both parts: " + byIntArray(green) + "\n");
+        decLog.append("Swapping/merging both parts: " + byIntArray(green) + "\n");
 
         int[] rightHEP = permute(rightHalf(green), E_P);
         decLog.append("Permuting the right half of " + byIntArray(green) + " with E/P: " + byIntArray(rightHEP) + "\n");
@@ -168,7 +168,7 @@ public class Zsdes
         decLog.append("Index of S0: " + indexAA + "\n");
         decLog.append("Index of S1: " + indexBB + "\n");
         int[] mx2 = getBinArray(indexAA, indexBB);
-        decLog.append("Indices into binary: " + byIntArray(mx2) + "\n");
+        decLog.append("Merged indices into binary: " + byIntArray(mx2) + "\n");
 
         int[] mx2PerP04 = permute(mx2, P04);
         decLog.append("Permuting " + byIntArray(mx2) + " with P04: " + byIntArray(mx2PerP04) + "\n");
@@ -201,7 +201,7 @@ public class Zsdes
         log.append("Generating Subkey A...\n");
 
         int[] kplus = generateKeyPlus(key, log);
-        log.append("Permuting: " + byIntArray(kplus) + " (with P08)" + "\n");
+        log.append("Permuting " + byIntArray(kplus) + " with P08..." + "\n");
         int[] keyA = permute(kplus, P08);
         log.append("Subkey A generated successfully: ");
         for(int i = 0; i < keyA.length; ++i)
@@ -225,10 +225,6 @@ public class Zsdes
         int[] kplus = generateKeyPlus(key, log);
         int[] keyPlusLeft = leftHalf(kplus);
         int[] keyPlusRight = rightHalf(kplus);
-        log.append("First part: ");
-        log.append(byIntArray(keyPlusLeft) + '\n');
-        log.append("Second part: ");
-        log.append(byIntArray(keyPlusRight) + '\n');
 
         keyPlusLeft = shiftLeft(shiftLeft(keyPlusLeft));
         keyPlusRight = shiftLeft(shiftLeft(keyPlusRight));
@@ -241,7 +237,7 @@ public class Zsdes
         log.append("Parts merged: ");
         log.append(byIntArray(kplusplus) + '\n');
 
-        log.append("Permuting: " + byIntArray(kplusplus) + " (with P08)" + "\n");
+        log.append("Permuting merged result with P08..." + "\n");
         int[] keyB = permute(kplusplus, P08);
         log.append("Subkey B generated successfully: ");
         log.append(byIntArray(keyB) + "\n\n");

@@ -1,11 +1,13 @@
 /*
  * AboutBox.java
  *
- * Created on November 16, 2008, 1:12 AM
+ * S-DES Crypto App
  * @version 1.0
+ * Created on November 16, 2008, 1:12 AM. Copyright (C) 2008-2021 by
  * @author Constantine Kyriakopoulos, zfox@users.sourceforge.net
  * License: GNU GPL v2
  */
+
 package zsdes;
 
 /**
@@ -36,7 +38,7 @@ public class AboutBox extends javax.swing.JDialog
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        jLabel1.setText("S-DES Demonstration App, Version 1.0");
+        jLabel1.setText("S-DES Crypto App, Version 1.0");
         jLabel2.setText("by Constantine Kyriakopoulos");
         jLabel3.setText("(C) 2008-2021");
         jButton1.setText("OK");

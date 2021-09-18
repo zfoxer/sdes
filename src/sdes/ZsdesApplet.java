@@ -1,8 +1,9 @@
 /*
  * ZsdesApplet.java
  *
- * Created on November 14, 2008, 6:26 PM
+ * S-DES Crypto App
  * @version 1.0
+ * Created on November 14, 2008, 6:26 PM. Copyright (C) 2008-2021 by
  * @author Constantine Kyriakopoulos, zfox@users.sourceforge.net
  * License: GNU GPL v2
  */

@@ -1,4 +1,4 @@
-# S-DES cryptography demonstration app for Java
+# S-DES Crypto App for Java
 
 ```python
 Copyright (C) 2008-2021 by Constantine Kyriakopoulos, zfox@users.sourceforge.net

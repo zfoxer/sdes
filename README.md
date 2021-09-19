@@ -1,10 +1,10 @@
 # S-DES Crypto App for Java
 
-```python
+<pre>
 Copyright (C) 2008-2021 by Constantine Kyriakopoulos, zfox@users.sourceforge.net
 Version: 1.0
 License: GNU GPL Version 2
-```
+</pre>
 
 ## Usage
 
@@ -12,9 +12,9 @@ Use the Java runtime environment 11 for execution. The GUI pops up that allows e
 
 ## Algorithm description
 
-```python
+<pre>
 Stallings, W., 2014. Cryptography and Network Security: Principles and Practice, 6th Edition, Appendix G.
-```
+</pre>
 
 ## Changelog
 

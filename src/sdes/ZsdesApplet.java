@@ -75,7 +75,7 @@ public class ZsdesApplet extends JFrame
         jTextField3.setEditable(false);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("S-DES Crypto App v1.0");
+        setTitle("S-DES Crypto App 1.0");
     }
 
     /**

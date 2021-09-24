@@ -29,7 +29,7 @@ public class Zsdes
     static public final int[][] s1 = {{0, 1, 2, 3}, {2, 0, 1, 3}, {3, 0, 1, 0}, {2, 1, 0, 3}};
 
     /**
-     * Encrypts the given ciphertext
+     * Encrypts the input plaintext
      * @param key The 10-bit encryption key in binary
      * @param plainText The 8-bit text to encrypt in binary
      * @param encLog Text buffer to put encryption process info
@@ -107,7 +107,7 @@ public class Zsdes
     }
 
     /**
-     * Decrypts the given ciphertext
+     * Decrypts the input ciphertext
      * @param key The 10-bit encryption key in binary
      * @param cipherText The 8-bit text to decrypt in binary
      * @param decLog Text buffer to put decryption process info

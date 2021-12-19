@@ -43,7 +43,8 @@ public class ZsdesApplet extends JFrame
      */
     public void init()
     {
-        try {
+        try
+        {
             java.awt.EventQueue.invokeAndWait(new Runnable()
             {
                 public void run()
@@ -52,8 +53,8 @@ public class ZsdesApplet extends JFrame
                     zInit();
                 }
             });
-        }
-        catch(Exception ex) {
+        } catch(Exception ex)
+        {
             ex.printStackTrace();
         }
     }
@@ -90,7 +91,8 @@ public class ZsdesApplet extends JFrame
         for(int i = 0; i < key.length; ++i)
             key[i] = Integer.parseInt(new String("" + jTextField1.getText().charAt(i)));
 
-        if(action == ACTION.ENCRYPT) {
+        if(action == ACTION.ENCRYPT)
+        {
             int[] plainText = new int[PLAINTEXT_SIZE];
             for(int i = 0; i < plainText.length; ++i)
                 plainText[i] = Integer.parseInt(new String("" + jTextField2.getText().charAt(i)));
@@ -104,7 +106,8 @@ public class ZsdesApplet extends JFrame
             jTextField3.setText(Zsdes.byIntArray(cipherText));
         }
 
-        if(action == ACTION.DECRYPT) {
+        if(action == ACTION.DECRYPT)
+        {
             int[] cipherText = new int[CIPHERTEXT_SIZE];
             for(int i = 0; i < cipherText.length; ++i)
                 cipherText[i] = Integer.parseInt(new String("" + jTextField3.getText().charAt(i)));
@@ -265,7 +268,8 @@ public class ZsdesApplet extends JFrame
      */
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt)
     {
-        if(jComboBox1.getSelectedItem().toString().equals("Encrypt")) {
+        if(jComboBox1.getSelectedItem().toString().equals("Encrypt"))
+        {
             jTextField3.setText("");
             jTextField3.setEditable(false);
             jTextField2.setEditable(true);
@@ -273,7 +277,8 @@ public class ZsdesApplet extends JFrame
             jTabbedPane1.setSelectedIndex(0);
         }
 
-        if(jComboBox1.getSelectedItem().toString().equals("Decrypt")) {
+        if(jComboBox1.getSelectedItem().toString().equals("Decrypt"))
+        {
             jTextField2.setText("");
             jTextField3.setEditable(true);
             jTextField2.setEditable(false);
@@ -281,7 +286,8 @@ public class ZsdesApplet extends JFrame
             jTabbedPane1.setSelectedIndex(1);
         }
 
-        if((jTextField1.getText().length() == KEY_SIZE && jTextField2.getText().length() == PLAINTEXT_SIZE) || (jTextField1.getText().length() == KEY_SIZE && jTextField3.getText().length() == CIPHERTEXT_SIZE)) {
+        if((jTextField1.getText().length() == KEY_SIZE && jTextField2.getText().length() == PLAINTEXT_SIZE) || (jTextField1.getText().length() == KEY_SIZE && jTextField3.getText().length() == CIPHERTEXT_SIZE))
+        {
             kickStart();
         }
     }
@@ -293,7 +299,8 @@ public class ZsdesApplet extends JFrame
      */
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt)
     {
-        if((jTextField1.getText().length() == KEY_SIZE && jTextField2.getText().length() == PLAINTEXT_SIZE) || (jTextField1.getText().length() == KEY_SIZE && jTextField3.getText().length() == CIPHERTEXT_SIZE)) {
+        if((jTextField1.getText().length() == KEY_SIZE && jTextField2.getText().length() == PLAINTEXT_SIZE) || (jTextField1.getText().length() == KEY_SIZE && jTextField3.getText().length() == CIPHERTEXT_SIZE))
+        {
             kickStart();
         }
     }
@@ -394,6 +401,7 @@ class JTextFieldLimiter extends PlainDocument
 
     /**
      * Constructs the instance with the input limit.
+     *
      * @param textLimit Limit to apply
      */
     JTextFieldLimiter(int textLimit)
@@ -404,14 +412,15 @@ class JTextFieldLimiter extends PlainDocument
 
     /**
      * Insert the string only if rules are obeyed.
-     * @param offset Offset
+     *
+     * @param offset  Offset
      * @param newText New string to insert
-     * @param attrib Attribute set
+     * @param attrib  Attribute set
      * @throws BadLocationException
      */
     public void insertString(int offset, String newText, AttributeSet attrib) throws BadLocationException
     {
-        if(newText == null || (!newText.endsWith("1") && !newText.endsWith("0")) )
+        if(newText == null || (!newText.endsWith("1") && !newText.endsWith("0")))
             return;
 
         if(getLength() + newText.length() <= textLimit)

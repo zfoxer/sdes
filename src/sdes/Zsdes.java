@@ -320,6 +320,16 @@ public class Zsdes
         return result;
     }
 
+    static private byte shiftLeft(byte data)
+    {
+        byte mask = 0b00100000;
+        data <<= 1;
+        if((byte)(mask & data) == mask)
+            data |= 0b00000001;
+
+        return data;
+    }
+
     /**
      * Performs Exclusive OR between the corresponding places of the two input arrays.
      *
@@ -335,6 +345,11 @@ public class Zsdes
             result[i] = (lhs[i] != rhs[i]) ? 1 : 0;
 
         return result;
+    }
+
+    static private byte xor(byte lhs, byte rhs)
+    {
+        return (byte)(lhs ^ rhs);
     }
 
     /**

@@ -10,6 +10,8 @@
 
 package zsdes;
 
+import java.security.InvalidParameterException;
+
 /**
  * Provides the back-end functionality of the app. All methods facilitating encryption, decryption
  * and key generation, reside here. It's the Zsdes library for usage by the front end.
@@ -370,6 +372,24 @@ public class Zsdes
         return leftHalf;
     }
 
+    private static byte leftHalf(final byte[] data)
+    {
+        if(data.length != 2)
+            throw new InvalidParameterException();
+
+        byte retByte = 0;
+        byte maskLeft = (byte)0b00000011;
+        byte maskRight = (byte)0b11100000;
+
+        retByte = (byte)((byte)data[0] & (byte)maskLeft);
+        retByte <<= 3;
+        byte tempByte = (byte)((byte)data[1] & (byte)maskRight);
+        tempByte >>= 5;
+        retByte |= tempByte;
+
+        return retByte;
+    }
+
     /**
      * Returns the right part of the input array.
      *
@@ -383,6 +403,14 @@ public class Zsdes
             rightHalf[i - data.length / 2] = data[i];
 
         return rightHalf;
+    }
+
+    private static byte rightHalf(final byte[] data)
+    {
+        if(data.length != 2)
+            throw new InvalidParameterException();
+
+        return (byte)((byte)data[1] & (byte)0b00011111);
     }
 
     /**
@@ -401,6 +429,13 @@ public class Zsdes
             return 2;
         if(data[0] == 1 && data[3] == 1)
             return 3;
+
+        return 0;
+    }
+
+    private static int getRow(final byte data)
+    {
+
 
         return 0;
     }

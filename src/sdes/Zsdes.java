@@ -435,9 +435,16 @@ public class Zsdes
 
     private static int getRow(final byte data)
     {
+        byte retRow = 0;
+        byte mask1 = 0b00001001;
+        byte mask2 = 0b00000001;
 
+        retRow = (byte)(mask1 & data);
+        byte lastBit = (byte)(mask2 & retRow);
+        retRow >>>= 2;
+        retRow |= lastBit;
 
-        return 0;
+        return Byte.toUnsignedInt(retRow);
     }
 
     /**
@@ -458,6 +465,16 @@ public class Zsdes
             return 3;
 
         return 0;
+    }
+
+    private static int getColumn(final byte data)
+    {
+        byte retRow = 0;
+        byte mask = 0b00000110;
+        retRow = (byte)(mask & data);
+        retRow >>>= 1;
+
+        return Byte.toUnsignedInt(retRow);
     }
 
     /**
@@ -598,6 +615,61 @@ public class Zsdes
             result[2] = 1;
             result[3] = 1;
         }
+
+        return result;
+    }
+
+    static private byte getBinArray2(int a, int b)
+    {
+        byte result = 0b00000000;
+
+        if(a == 0 && b == 0)
+            result = 0b00000000;
+
+        if(a == 0 && b == 1)
+            result = 0b00000001;
+
+        if(a == 0 && b == 2)
+            result = 0b00000010;
+
+        if(a == 0 && b == 3)
+            result = 0b00000011;
+
+        if(a == 1 && b == 0)
+            result = 0b00000100;
+
+        if(a == 1 && b == 1)
+            result = 0b00000101;
+
+        if(a == 1 && b == 2)
+            result = 0b00000110;
+
+        if(a == 1 && b == 3)
+            result = 0b00000111;
+
+        if(a == 2 && b == 0)
+            result = 0b00001000;
+
+        if(a == 2 && b == 1)
+            result = 0b00001001;
+
+        if(a == 2 && b == 2)
+            result = 0b00001010;
+
+        if(a == 2 && b == 3)
+            result = 0b00001011;
+
+        if(a == 3 && b == 0)
+            result = 0b00001100;
+
+        if(a == 3 && b == 1)
+            result = 0b00001101;
+
+        if(a == 3 && b == 2)
+            result = 0b00001110;
+
+        if(a == 3 && b == 3)
+            result = 0b00001111;
 
         return result;
     }
